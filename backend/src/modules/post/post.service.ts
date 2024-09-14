@@ -29,4 +29,13 @@ export class PostService {
             throw err;
           }
     };
+
+    async findAll() {
+      const posts = await this.postModel.find().exec();
+      return posts.map(post => post.message);
+  }
+
+  async deleteAll() {
+    return await this.postModel.deleteMany({}).exec();
+  }
 };
