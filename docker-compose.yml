@@ -30,17 +30,17 @@ services:
 
   postgresql:
     image: postgres
-    container_name: postgres_data_base
+    container_name: postgresql
     ports:
       - "5432:5432"
     volumes:
-      - /home/user/postgres_data:/var/lib/postgresql/data
+      - /postgres_data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_HOST=localhost
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
-      - POSTGRES_DATABASE=example
-    command: postgres
+      - POSTGRES_DB=example
+    networks:
+      - web_serv
     restart: always
 
   post_backend:
@@ -51,6 +51,8 @@ services:
       - 4050:4050
     networks:
       - web_serv
+    env_file:
+      - ./post_backend/.env
 
   auth_backend:
     build: ./auth_backend
@@ -60,6 +62,8 @@ services:
       - 4051:4051
     networks:
       - web_serv
+    env_file:
+      - ./auth_backend/.env
 
 volumes:
   mongodb_data:

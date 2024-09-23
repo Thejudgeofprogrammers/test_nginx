@@ -18,11 +18,11 @@ import { TokenModule } from './token/token.module';
             inject: [ConfigService],
             useFactory: (configService: ConfigService) => ({
                 dialect: "postgres",
-                hots: configService.get('db_host'),
+                host: configService.get('db_host'),
                 port: configService.get('db_port'),
                 username: configService.get('db_user'),
                 password: configService.get('db_password'),
-                name: configService.get('db_name'),
+                database: configService.get('db_name'),
                 synchronize: true,
                 autoLoadModels: true,
                 models: [User]

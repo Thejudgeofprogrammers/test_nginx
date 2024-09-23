@@ -1,34 +1,46 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Box } from '@mui/material';
-import SidebarComponent from './components/sidebar';
-import Home from './components/home';
-import PostForm from './components/post';
-import Register from './components/register';
-import Login from './components/login';
-import PrivateRoute from './components/private-route';
-import Profile from './components/profile';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { ThemeContextProvider } from './context/ThemeContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import Register from './components/RegisterPage';
+import Login from './components/LoginPage';
+import Dashboard from './components/Dashboard';
+import Sidebar from './components/Sidebar';
+import ThemeSwitcher from './context/ThemeSwitcher';
 
+// Компонент для защищённых маршрутов
+const PrivateRoute = ({ children }: { children: JSX.Element }) => {
+    const { isAuthenticated } = useAuth();
+    return isAuthenticated ? children : <Navigate to="/login" />;
+};
 
 const App: React.FC = () => {
   return (
-    <Router>
-      <Box sx={{ display: 'flex', height: '100vh' }}>
-        {/* Боковая панель */}
-        <SidebarComponent />
-
-        {/* Основной контент, который занимает оставшееся пространство */}
-        <Box component="main" sx={{ flexGrow: 1, overflow: 'auto', marginLeft: 324 }}>
-          <Routes>
-            <Route path="/api/auth/login" element={<Login />} />
-            <Route path="/api/auth/register" element={<Register />} />
-            <Route path="/" element={<PrivateRoute element={<Home />} />} />
-            <Route path="/api/post" element={<PrivateRoute element={<PostForm />} />} />
-            <Route path="/api/user/:id/profile" element={<PrivateRoute element={<Profile />} />} />
-          </Routes>
-        </Box>
-      </Box>
-    </Router>
+    <ThemeContextProvider>
+      <AuthProvider>
+        <Router>
+          <div>
+            {/* Переключатель темы можно добавить в навбар */}
+            <ThemeSwitcher />
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route
+                path="/dashboard"
+                element={
+                  <PrivateRoute>
+                    <Sidebar>
+                      <Dashboard />
+                    </Sidebar>
+                  </PrivateRoute>
+                }
+              />
+              <Route path="*" element={<Navigate to="/login" />} />
+            </Routes>
+          </div>
+        </Router>
+      </AuthProvider>
+    </ThemeContextProvider>
   );
 };
 

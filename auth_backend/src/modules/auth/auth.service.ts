@@ -15,13 +15,16 @@ export class AuthService {
 
     async registerUser(dto: CreateUserDTO): Promise<CreateUserDTO> {
         try {
+            console.log('Received registration data:', dto);
             const existUser = await this.userService.findUserByEmail(dto.email);
-            if (existUser) throw new BadRequestException('Error user exist!')
+            console.log('Existing user check:', existUser);
+            if (existUser) throw new BadRequestException('Error user exist!');
             return this.userService.createUser(dto);        
         } catch (err) {
-            throw new Error(err);  
-        };
-    };
+            console.error('Registration error:', err); // Логируем ошибку
+            throw err;
+        }
+    }
 
     async loginUser(dto: UserLoginDTO): Promise<AuthUserResponse> {
         try {

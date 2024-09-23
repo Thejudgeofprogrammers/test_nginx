@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { PostModule } from './post/post.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import configurations from '../configurations';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
     imports: [
@@ -17,7 +17,7 @@ import configurations from '../configurations';
             }),
             inject: [ConfigService],
         }),
-        PostModule
+        ChatModule
     ],
 })
 export class AppModule {};

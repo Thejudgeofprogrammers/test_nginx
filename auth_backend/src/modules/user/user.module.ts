@@ -8,7 +8,7 @@ import { User } from './entities/user.entity';
     imports: [
         SequelizeModule.forFeature([
             User
-        ])
+        ]),
     ],
     providers: [UserService],
     controllers: [UserController],

@@ -7,7 +7,7 @@ import { CreateUserDTO, UpdateUserDTO } from './dto';
 @Injectable()
 export class UserService {
     constructor(
-        @InjectModel(User) private readonly userRepository: typeof User
+        @InjectModel(User) private readonly userRepository: typeof User,
     ) {};
 
     async hashPassword(password: string): Promise<string> {
@@ -18,9 +18,9 @@ export class UserService {
         };
     };
 
-    async findUserByEmail(email: string): Promise<User> {
+    async findUserByEmail(email: string): Promise<User | null> {
         try {
-            return await this.userRepository.findOne({ where: { email }});      
+            return await this.userRepository.findOne({ where: { email } });      
         } catch (err) {
             throw new Error(err);
         };
