@@ -64,7 +64,7 @@ services:
       - web_serv
     env_file:
       - ./auth_backend/.env
-
+  
 volumes:
   mongodb_data:
 

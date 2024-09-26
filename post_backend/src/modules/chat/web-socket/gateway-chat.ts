@@ -10,24 +10,24 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @WebSocketServer()
     server: Server;
 
-    constructor(private readonly chatService: ChatService) {};
+    constructor(private readonly chatService: ChatService) {}
 
     async handleConnection(client: Socket) {
         console.log('Client connected:', client.id);
-    };
+    }
 
     async handleDisconnect(client: Socket) {
         console.log('Client disconnected:', client.id);
-    };
+    }
 
     @SubscribeMessage('sendMessage')
     async handleMessage(client: Socket, payload: { chatId: string, message: IMessageSchemaDTO }) {
         const chat = await this.chatService.addMessageToChat(payload.chatId, payload.message);
         this.server.to(payload.chatId).emit('newMessage', payload.message);
-    };
+    }
 
     @SubscribeMessage('joinChat')
     handleJoinChat(client: Socket, chatId: string) {
         client.join(chatId);
-    };
-};
+    }
+}

@@ -21,7 +21,7 @@ export class AuthService {
             if (existUser) throw new BadRequestException('Error user exist!');
             return this.userService.createUser(dto);        
         } catch (err) {
-            console.error('Registration error:', err); // Логируем ошибку
+            console.error('Registration error:', err);
             throw err;
         }
     }
