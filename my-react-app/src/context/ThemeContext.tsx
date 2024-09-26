@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
+import Cookies from 'js-cookie';
 
 interface ThemeContextType {
   toggleTheme: () => void;
@@ -17,19 +18,15 @@ export const useThemeContext = () => {
 };
 
 export const ThemeContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [mode, setMode] = useState<'light' | 'dark'>('light');
+  // Инициализация состояния с использованием куки
+  const [mode, setMode] = useState<'light' | 'dark'>(() => {
+    const savedTheme = Cookies.get('theme');
+    return savedTheme === 'dark' ? 'dark' : 'light'; // Устанавливаем 'light' по умолчанию
+  });
 
-  // Загрузка темы из localStorage при первой загрузке страницы
+  // Сохранение выбранной темы в куки при изменении
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      setMode(savedTheme as 'light' | 'dark');
-    }
-  }, []);
-
-  // Сохранение выбранной темы в localStorage при изменении
-  useEffect(() => {
-    localStorage.setItem('theme', mode);
+    Cookies.set('theme', mode);
   }, [mode]);
 
   const toggleTheme = () => {
